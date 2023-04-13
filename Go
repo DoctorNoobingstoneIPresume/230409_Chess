@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e -o pipefail
+
+Main ()
+{
+	printf "Building...\n{\n"
+	"./Go.pl" "$@"
+	printf "}\n\n"
+}
+
+Main "$@"
