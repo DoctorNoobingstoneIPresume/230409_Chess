@@ -23,5 +23,17 @@ int main ()
 			Azzert (s.size () == 2);
 			Azzert (s [0] == 'A' + x);
 			Azzert (s [1] == '1' + y);
+			
+			Position posCheck;
+			{
+				std::string sCheck = "    \t    " + s + "    \t    ";
+				std::istringstream is (sCheck);
+				is >> posCheck;
+				Azzert (is);
+			}
+			
+			Azzert (posCheck == pos);
 		}
+	
+	std::cout << "Quality extraordinaire.\n";
 }

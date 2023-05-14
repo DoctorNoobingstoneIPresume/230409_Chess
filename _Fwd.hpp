@@ -10,6 +10,13 @@ namespace Chess1
 typedef unsigned Coord;
 const Coord g_cxBoard = 8;
 const Coord g_cyBoard = 8;
+const Coord g_xSpecial = -1, g_xError = -2;
+const Coord g_ySpecial = -1, g_yError = -2;
+
+constexpr bool IsValidX   (Coord x) { return x < g_cxBoard; }
+constexpr bool IsValidY   (Coord y) { return y < g_cyBoard; }
+constexpr bool IsSpecialX (Coord x) { return x == g_xSpecial; }
+constexpr bool IsSpecialY (Coord y) { return y == g_ySpecial; }
 
 const unsigned g_nPlayers = 2;
 
