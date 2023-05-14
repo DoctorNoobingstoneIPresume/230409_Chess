@@ -32,7 +32,12 @@ AzzertionHasFailed
 	const boost::string_view &sFunctionName
 );
 
-#define Azzert_Msg(bCondition, sMessage) do { if (! (bCondition)) AzzertionHasFailed_Msg (__FILE__, __LINE__, __func__, sMessage); } while (0)
-#define Azzert(bCondition)               do { if (! (bCondition)) AzzertionHasFailed     (__FILE__, __LINE__, __func__          ); } while (0)
-
 }
+
+#define Chess1_Azzert_Msg(bCondition, sMessage) do { if (! (bCondition)) Chess1::AzzertionHasFailed_Msg (__FILE__, __LINE__, __func__, sMessage); } while (0)
+#define Chess1_Azzert(bCondition)               do { if (! (bCondition)) Chess1::AzzertionHasFailed     (__FILE__, __LINE__, __func__          ); } while (0)
+
+#ifndef CHESS1_NO_UNAFFIXED_AZZERT
+	#define Azzert_Msg Chess1_Azzert_Msg
+	#define Azzert     Chess1_Azzert
+#endif
