@@ -8,6 +8,7 @@ namespace Chess1
 
 Coord Position::GetX () const { return _x; }
 Coord Position::GetY () const { return _y; }
+bool Position::IsValid () const { return IsValidX (_x) && IsValidY (_y); }
 
 Position &Position::SetX (Coord value) { _x = value; return *this; }
 Position &Position::SetY (Coord value) { _y = value; return *this; }
