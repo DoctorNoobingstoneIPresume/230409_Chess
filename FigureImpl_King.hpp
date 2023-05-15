@@ -30,6 +30,11 @@ class FigureImpl_King:
 	(const Board &board, const Position &pos0, const Position &pos1)
 	const
 	override;
+	
+	void
+	Do_BeforeMove
+	(const Board &board, const Position &pos0, const Position &pos1)
+	override;
 };
 
 }

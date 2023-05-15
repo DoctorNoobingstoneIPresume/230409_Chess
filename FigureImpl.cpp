@@ -26,6 +26,11 @@ const
 	return true;
 }
 
+void
+FigureImpl::Do_BeforeMove
+(const Board &board, const Position &pos0, const Position &pos1)
+{}
+
 bool
 FigureImpl::CanTravelBackAndForth
 ()
@@ -59,6 +64,14 @@ const
 	}
 	
 	return bResult_Forth;
+}
+
+void
+FigureImpl::BeforeMove
+(const Board &board, const Position &pos0, const Position &pos1)
+{
+	Azzert (CanMove (board, pos0, pos1));
+	return Do_BeforeMove (board, pos0, pos1);
 }
 
 std::string

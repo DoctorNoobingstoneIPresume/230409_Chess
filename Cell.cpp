@@ -91,6 +91,13 @@ const
 	return _pImpl->CanMove (board, pos0, pos1);
 }
 
+void
+Cell::BeforeMove
+(const Board &board, const Position &pos0, const Position &pos1)
+{
+	return _pImpl->BeforeMove (board, pos0, pos1);
+}
+
 //const FigureImpl *
 //Cell::AdrImpl
 //()

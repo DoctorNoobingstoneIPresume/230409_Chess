@@ -65,6 +65,10 @@ class Cell
 	(const Board &board, const Position &pos0, const Position &pos1)
 	const;
 	
+	void
+	BeforeMove
+	(const Board &board, const Position &pos0, const Position &pos1);
+	
 	// [2023-05-15]
 	//const FigureImpl *
 	//AdrImpl

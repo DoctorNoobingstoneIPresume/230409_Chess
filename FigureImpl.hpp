@@ -45,6 +45,11 @@ class FigureImpl:
 	(const Board &board, const Position &pos0, const Position &pos1)
 	const
 	= 0;
+	
+	virtual
+	void
+	Do_BeforeMove
+	(const Board &board, const Position &pos0, const Position &pos1);
 
  public:
 	std::string
@@ -70,6 +75,10 @@ class FigureImpl:
 	CanMove
 	(const Board &board, const Position &pos0, const Position &pos1)
 	const;
+	
+	void
+	BeforeMove
+	(const Board &board, const Position &pos0, const Position &pos1);
 };
 
 std::ostream &operator<< (std::ostream &os, const FigureImpl &figureimpl);
