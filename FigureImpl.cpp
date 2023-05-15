@@ -1,4 +1,6 @@
 #include "FigureImpl.hpp"
+#include "Board.hpp"
+#include "Cell.hpp"
 
 #include <iostream>
 
@@ -16,40 +18,48 @@ FigureImpl::Do_Get
 	return is;
 }
 
-// [2023-05-14 :x]
-//bool
-//FigureImpl::CanTravelBackAndForth
-//()
-//const
-//{
-//	return Do_CanTravelBackAndForth ();
-//}
-//
-//bool
-//FigureImpl::CanMove
-//(const Board &board, const Position &position0, const Position &position1)
-//const
-//{
-//	Azzert (position1 != position0);
-//	//Azzert (board.at (position1).empty ());
-//	const bool bResult_Forth = Do_CanMove (board, position0, position1);
-//	
-//	if (Do_CanTravelBackAndForth ())
-//	{
-//		const bool bResult_Back = Do_CanMove (board, position1, position0);
-//		Azzert (bResult_Back == bResult_Forth);
-//	}
-//	
-//	return bResult_Forth;
-//}
-//
-//bool
-//FigureImpl::CanAttack
-//(const Board &board, const Position &position0, const Position &position1)
-//const
-//{
-//	return false; // [2023-04-11] TODO !!
-//}
+bool
+FigureImpl::Do_CanTravelBackAndForth
+()
+const
+{
+	return true;
+}
+
+bool
+FigureImpl::CanTravelBackAndForth
+()
+const
+{
+	return Do_CanTravelBackAndForth ();
+}
+
+bool
+FigureImpl::CanMove
+(const Board &board, const Position &pos0, const Position &pos1)
+const
+{
+	Azzert (pos1 != pos0);
+	
+	const Cell &cell0 = board.At (pos0);
+	const unsigned iPlayer0 = cell0.GetPlayer ();
+	Azzert (IsValidPlayer (iPlayer0));
+	
+	const Cell &cell1 = board.At (pos1);
+	const unsigned iPlayer1 = cell1.GetPlayer ();
+	Azzert (iPlayer1 != iPlayer0);
+	
+	//Azzert (board.at (pos1).empty ());
+	const bool bResult_Forth = Do_CanMove (board, pos0, pos1);
+	
+	if (Do_CanTravelBackAndForth ())
+	{
+		const bool bResult_Back = Do_CanMove (board, pos1, pos0);
+		Azzert (bResult_Back == bResult_Forth);
+	}
+	
+	return bResult_Forth;
+}
 
 std::string
 FigureImpl::GetTypeID

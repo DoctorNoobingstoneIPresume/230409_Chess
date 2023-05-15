@@ -24,6 +24,12 @@ class FigureImpl_King:
 	Do_Get
 	(std::istream &is)
 	override;
+	
+	bool
+	Do_CanMove
+	(const Board &board, const Position &pos0, const Position &pos1)
+	const
+	override;
 };
 
 }

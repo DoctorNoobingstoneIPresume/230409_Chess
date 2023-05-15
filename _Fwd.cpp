@@ -16,6 +16,7 @@ GetPlayerName
 	{
 	 case 0:  { return "white"; }
 	 case 1:  { return "black"; }
+	 case -1: { return "noone"; }
 	 default: { throw std::runtime_error ("Bad player number !"); }
 	}
 }

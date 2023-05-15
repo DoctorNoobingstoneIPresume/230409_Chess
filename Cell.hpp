@@ -10,6 +10,10 @@ namespace Chess1
 
 class FigureImpl;
 
+// For CanMove:
+class Board;
+class Position;
+
 class Cell
 {
  private:
@@ -50,6 +54,26 @@ class Cell
 	IsOccupied
 	()
 	const;
+	
+	std::string
+	GetTypeID
+	()
+	const;
+	
+	bool
+	CanMove
+	(const Board &board, const Position &pos0, const Position &pos1)
+	const;
+	
+	// [2023-05-15]
+	//const FigureImpl *
+	//AdrImpl
+	//()
+	//const;
+	//
+	//FigureImpl *
+	//AdrImpl
+	//();
 
  public:
 	std::ostream &Put (std::ostream &os) const;
