@@ -16,6 +16,7 @@ class Position
  public:
 	Coord GetX () const;
 	Coord GetY () const;
+	bool IsValid () const;
 	
 	Position &SetX (Coord value);
 	Position &SetY (Coord value);

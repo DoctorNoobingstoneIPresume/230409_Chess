@@ -2,10 +2,17 @@
 
 #include <boost/utility/string_view.hpp>
 
+#include <string>
+
 #include <stdint.h>
 
 namespace Chess1
 {
+
+// [2023-05-15] conmv: Like const (for the purpose of self-documenting), except that it might be moved-from at some point.
+#ifndef conmv
+ #define conmv
+#endif
 
 typedef unsigned Coord;
 const Coord g_cxBoard = 8;
@@ -19,6 +26,8 @@ constexpr bool IsSpecialX (Coord x) { return x == g_xSpecial; }
 constexpr bool IsSpecialY (Coord y) { return y == g_ySpecial; }
 
 const unsigned g_nPlayers = 2;
+std::string GetPlayerName (unsigned iPlayer);
+constexpr bool IsValidPlayer (unsigned iPlayer) { return iPlayer < g_nPlayers; }
 
 [[noreturn]]
 void

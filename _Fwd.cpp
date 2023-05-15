@@ -1,11 +1,24 @@
 #include "_Fwd.hpp"
 
 #include <iostream>
+#include <stdexcept>
 
 #include <cstdlib>
 
 namespace Chess1
 {
+
+std::string
+GetPlayerName
+(unsigned iPlayer)
+{
+	switch (iPlayer)
+	{
+	 case 0:  { return "white"; }
+	 case 1:  { return "black"; }
+	 default: { throw std::runtime_error ("Bad player number !"); }
+	}
+}
 
 [[noreturn]]
 void
