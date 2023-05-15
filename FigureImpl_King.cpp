@@ -10,6 +10,14 @@ FigureImpl_King::FigureImpl_King
 	_nTeleports (2)
 {}
 
+FigureImpl *
+FigureImpl_King::Do_Clone
+()
+const
+{
+	return new FigureImpl_King (*this);
+}
+
 std::string
 FigureImpl_King::Do_GetTypeID
 ()

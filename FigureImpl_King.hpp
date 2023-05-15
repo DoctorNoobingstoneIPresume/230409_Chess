@@ -14,6 +14,12 @@ class FigureImpl_King:
 	();
 
  private:
+	FigureImpl *
+	Do_Clone
+	()
+	const
+	override;
+	
 	std::string
 	Do_GetTypeID
 	()

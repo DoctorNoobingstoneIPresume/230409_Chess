@@ -7,6 +7,12 @@ class FigureImpl_Queen:
 	public FigureImpl
 {
  private:
+	FigureImpl *
+	Do_Clone
+	()
+	const
+	override;
+	
 	std::string
 	Do_GetTypeID
 	()
