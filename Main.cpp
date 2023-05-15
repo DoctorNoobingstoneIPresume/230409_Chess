@@ -100,7 +100,10 @@ int main (int argc, char **argv)
 			}
 			
 			if (cell0.CanMove (board, pos0, pos1))
+			{
+				cell0.BeforeMove (board, pos0, pos1);
 				cell1 = std::move (cell0);
+			}
 			else
 			{
 				std::cerr << "Cannot perform move (" << cell0.GetTypeID () << ") !\n";
