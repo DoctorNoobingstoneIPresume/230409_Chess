@@ -1,5 +1,6 @@
 #include "Board.hpp"
 #include "Position.hpp"
+#include "Cell.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -46,8 +47,11 @@ int main (int argc, char **argv)
 			return 1;
 		}
 		
-		for (;;)
+		for (unsigned iPlayer = 0; ; ++iPlayer)
 		{
+			if (iPlayer >= g_nPlayers)
+				iPlayer = 0;
+			
 			Position pos0;
 			{
 				is >> pos0;
@@ -75,7 +79,33 @@ int main (int argc, char **argv)
 				}
 			}
 			
-			std::cout << pos0 << pos1 << "\n";
+			std::cout << GetPlayerName (iPlayer) << ": " << pos0 << pos1 << "\n";
+			
+			Cell &cell0 = board.At (pos0);
+			if (cell0.GetPlayer () != iPlayer)
+			{
+				std::cerr
+					<< "Cell " << pos0 << " (" << cell0 << ") should be occupied by " << GetPlayerName (iPlayer)
+					<< ", but it is occupied by " << GetPlayerName (cell0.GetPlayer ()) << " !\n";
+				return 1;
+			}
+			
+			Cell &cell1 = board.At (pos1);
+			if (cell1.GetPlayer () == iPlayer)
+			{
+				std::cerr
+					<< "Cell " << pos1 << " ( " << cell1 << ") should *not* be occupied by " << GetPlayerName (iPlayer)
+					<< ", but it is !\n";
+				return 1;
+			}
+			
+			if (cell0.CanMove (board, pos0, pos1))
+				cell1 = std::move (cell0);
+			else
+			{
+				std::cerr << "Cannot perform move (" << cell0.GetTypeID () << ") !\n";
+				return 1;
+			}
 		}
 	}
 	

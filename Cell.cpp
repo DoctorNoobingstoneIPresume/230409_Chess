@@ -75,6 +75,37 @@ const
 	return IsValidPlayer (_iPlayer);
 }
 
+std::string
+Cell::GetTypeID
+()
+const
+{
+	return _pImpl->GetTypeID ();
+}
+
+bool
+Cell::CanMove
+(const Board &board, const Position &pos0, const Position &pos1)
+const
+{
+	return _pImpl->CanMove (board, pos0, pos1);
+}
+
+//const FigureImpl *
+//Cell::AdrImpl
+//()
+//const
+//{
+//	return _pImpl.get ();
+//}
+//
+//FigureImpl *
+//Cell::AdrImpl
+//()
+//{
+//	return _pImpl.get ();
+//}
+
 std::ostream &Cell::Put (std::ostream &os) const
 {
 	std::ostringstream osTmp;

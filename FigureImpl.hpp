@@ -33,27 +33,18 @@ class FigureImpl:
 	Do_Get
 	(std::istream &is);
 	
-	// [2023-05-14 :x]
-	//virtual
-	//bool
-	//Do_CanTravelBackAndForth
-	//()
-	//const
-	//= 0;
-	//
-	//virtual
-	//bool
-	//Do_CanMove
-	//(const Board &board, const Position &position0, const Position &position1)
-	//const
-	//= 0;
-	//
-	//virtual
-	//bool
-	//Do_CanAttack
-	//(const Board &board, const Position &position0, const Position &position1)
-	//const
-	//= 0;
+	virtual
+	bool
+	Do_CanTravelBackAndForth
+	()
+	const;
+	
+	virtual
+	bool
+	Do_CanMove
+	(const Board &board, const Position &pos0, const Position &pos1)
+	const
+	= 0;
 
  public:
 	std::string
@@ -70,21 +61,15 @@ class FigureImpl:
 	Get
 	(std::istream &is);
 	
-	// [2023-05-14 :x]
-	//bool
-	//CanTravelBackAndForth
-	//()
-	//const;
-	//
-	//bool
-	//CanMove
-	//(const Board &board, const Position &position0, const Position &position1)
-	//const;
-	//
-	//bool
-	//CanAttack
-	//(const Board &board, const Position &position0, const Position &position1)
-	//const;
+	bool
+	CanTravelBackAndForth
+	()
+	const;
+	
+	bool
+	CanMove
+	(const Board &board, const Position &pos0, const Position &pos1)
+	const;
 };
 
 std::ostream &operator<< (std::ostream &os, const FigureImpl &figureimpl);
