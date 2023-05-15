@@ -4,6 +4,14 @@
 namespace Chess1
 {
 
+FigureImpl *
+FigureImpl_Bishop::Do_Clone
+()
+const
+{
+	return new FigureImpl_Bishop (*this);
+}
+
 std::string
 FigureImpl_Bishop::Do_GetTypeID
 ()

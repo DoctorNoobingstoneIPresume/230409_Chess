@@ -7,6 +7,12 @@ class FigureImpl_Pawn:
 	public FigureImpl
 {
  private:
+	FigureImpl *
+	Do_Clone
+	()
+	const
+	override;
+	
 	bool
 	Do_CanTravelBackAndForth
 	()

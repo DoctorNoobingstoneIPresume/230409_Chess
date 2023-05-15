@@ -3,6 +3,7 @@
 #include "Cell.hpp"
 
 #include <iostream>
+#include <typeinfo>
 
 namespace Chess1
 {
@@ -10,6 +11,14 @@ namespace Chess1
 FigureImpl::~FigureImpl
 ()
 {}
+
+FigureImpl::FigureImpl
+(const FigureImpl &rhs)
+= default;
+
+FigureImpl::FigureImpl
+()
+= default;
 
 std::istream &
 FigureImpl::Do_Get
@@ -30,6 +39,18 @@ void
 FigureImpl::Do_BeforeMove
 (const Board &board, const Position &pos0, const Position &pos1)
 {}
+
+std::unique_ptr <FigureImpl>
+FigureImpl::Clone
+()
+const
+{
+	FigureImpl *const p = Do_Clone ();
+	Azzert (p);
+	//std::cout << typeid (*p).name () << " is a clone of " << typeid (*this).name () << "...\n";
+	Azzert (typeid (*p) == typeid (*this));
+	return std::unique_ptr <FigureImpl> (p);
+}
 
 bool
 FigureImpl::CanTravelBackAndForth
