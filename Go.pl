@@ -9,7 +9,7 @@ sub my_system
 	my $iResult = system (@_);
 	if ($iResult)
 	{
-		printf (IndentWithTitle (ArrayToString (\@_), "Failure (code ${iResult}):"));
+		print (IndentWithTitle (ArrayToString (\@_), "Failure (code ${iResult}):"));
 		{ use IO::Handle; STDOUT->flush (); }
 		exit (1);
 	}
@@ -64,20 +64,14 @@ sub Main
 	{
 		foreach my $sUnit (@asUnits)
 		{
-			my $sUnitJustName = $sUnit;
-			{
-				if ($sUnit =~ m#(.*)[.](.*)#)
-				{
-					$sUnitJustName = $1;
-				}
-			}
+			my ($sUnitJustName, $sUnitJustExt) = SplitToJustNameAndJustExt ($sUnit);
 			
 			my $sObject = "${sBuildFolder}/${sUnitJustName}.o";
 			my @asArgs =
 			(
 				'g++',
 				'-std=c++11',
-				'-I', $ENV {"BOOST_ROOT"},
+				'-I', $ENV {'BOOST_ROOT'},
 				'-g',
 				'-c', $sUnit,
 				'-o', $sObject
@@ -139,12 +133,6 @@ sub Main
 		foreach my $sObjectLink (@asObjectsLink)
 		{
 			my $sObjectLinkJustName = (&SplitToJustNameAndJustExt ($sObjectLink)) [0];
-			#{
-			#	if ($sObjectLink =~ m#(.*)\.(.*)#)
-			#	{
-			#		$sObjectLinkJustName = $1;
-			#	}
-			#}
 			
 			printf ("Linking => %s...\n{\n", "\"${sObjectLinkJustName}\"");
 			
@@ -179,5 +167,6 @@ my $iResult = &Main ();
 if ($iResult)
 {
 	printf "Main has failed !\n";
+	{ use IO::Handle; STDOUT->flush (); }
 	exit ($iResult);
 }
