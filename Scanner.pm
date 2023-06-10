@@ -26,23 +26,28 @@ sub Get
 
 sub Scan
 {
-	my $self              = @_ ? shift : Azzert ();
-	my $sPathName0        = @_ ? shift : Azzert ();
-	my $rasIncludeFolders = @_ ? shift : [];
-	my $rhsPathNamesAbove = @_ ? shift : {};
+	my $self               = @_ ? shift : Azzert ();
+	my $sPathName0         = @_ ? shift : Azzert ();
+	my $rhksIncludeFolders = @_ ? shift : {};
+	my $rhksPathNamesAbove = @_ ? shift : {};
 	# [2023-06-10]
 	if (1)
 	{
-		foreach my $s (@$rasIncludeFolders)
+		my %hksIncludeFolders_New = ();
+		foreach my $ks (sort keys %$rhksIncludeFolders)
 		{
-			$s =~ s#[\\]#[/]#g;
+			$ks =~ s#[\\]#[/]#g;
 			
-			if ($s =~ m#(.*)/#)
+			if ($ks =~ m#(.*)/#)
 			{
 				#printf ("Modifying %s to %s...\n", "\"${s}\"", "\"${1}\"");
-				$s = $1;
+				$ks = $1;
 			}
+			
+			$hksIncludeFolders_New {$ks} = 1;
 		}
+		
+		$rhksIncludeFolders = \%hksIncludeFolders_New;
 	}
 	
 	my $rhSourceFiles = $self->{rhSourceFiles};
@@ -97,13 +102,13 @@ sub Scan
 				{
 					foreach my $sName1 (sort keys %hksNames1)
 					{
-						foreach my $sIncludeFolder (@$rasIncludeFolders)
+						foreach my $ksIncludeFolder (sort keys %$rhksIncludeFolders)
 						{
-							my $sPathName1 = $sIncludeFolder . ($sIncludeFolder =~ m#/$# ? '' : '/') . $sName1;
+							my $sPathName1 = $ksIncludeFolder . ($ksIncludeFolder =~ m#/$# ? '' : '/') . $sName1;
 							if (exists ($hksPathNames1 {$sPathName1}))
 								{ next; }
 							
-							my $sourcefile1 = $self->Scan ($sPathName1, $rasIncludeFolders);
+							my $sourcefile1 = $self->Scan ($sPathName1, $rhksIncludeFolders);
 							if ($sourcefile1)
 							{
 								$hksPathNames1 {$sPathName1} = 1;

@@ -93,7 +93,7 @@ sub Main
 		foreach my $sUnit (@asUnits)
 		{
 			printf ("Scanning \"%s\":\n{\n", $sUnit);
-			my $sourcefile = $scanner->Scan ($sUnit, ['./']);
+			my $sourcefile = $scanner->Scan ($sUnit, {'./' => 1});
 			if (defined ($sourcefile))
 			{
 				printf ("%s\n", $sourcefile->ToString ());
