@@ -93,17 +93,20 @@ sub Scan
 				
 				$sourcefile->IncludeNames (\%hksNames1);
 				
-				my @asPathNames1 = ();
+				my %hksPathNames1 = ();
 				{
 					foreach my $sName1 (sort keys %hksNames1)
 					{
 						foreach my $sIncludeFolder (@$rasIncludeFolders)
 						{
 							my $sPathName1 = $sIncludeFolder . ($sIncludeFolder =~ m#/$# ? '' : '/') . $sName1;
+							if (exists ($hksPathNames1 {$sPathName1}))
+								{ next; }
+							
 							my $sourcefile1 = $self->Scan ($sPathName1, $rasIncludeFolders);
 							if ($sourcefile1)
 							{
-								push (@asPathNames1, $sPathName1);
+								$hksPathNames1 {$sPathName1} = 1;
 								if ($sourcefile1->MaxModifyTime () > $sourcefile->MaxModifyTime ())
 								{
 									$sourcefile->MaxModifyTime     ($sourcefile1->MaxModifyTime     ());
@@ -114,7 +117,7 @@ sub Scan
 					}
 				}
 				
-				$sourcefile->IncludePathNames (\@asPathNames1);
+				$sourcefile->IncludePathNames (\%hksPathNames1);
 			}
 		} while (0);
 		

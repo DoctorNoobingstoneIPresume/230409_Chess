@@ -8,11 +8,11 @@ sub CreateObject
 	
 	my $self = bless ({}, $sClassName);
 	{
-		$self->{rhksIncludeNames}    = {};
-		$self->{rasIncludePathNames} = [];
-		$self->{tModify}             = 0;
-		$self->{sMaxModifyPathName}  = '';
-		$self->{tMaxModify}          = 0;
+		$self->{rhksIncludeNames}     = {};
+		$self->{rhksIncludePathNames} = {};
+		$self->{tModify}              = 0;
+		$self->{sMaxModifyPathName}   = '';
+		$self->{tMaxModify}           = 0;
 	}
 	
 	return $self;
@@ -39,12 +39,12 @@ sub IncludePathNames
 	if (@_)
 	{
 		my $value = shift;
-		$self->{rasIncludePathNames} = $value;
+		$self->{rhksIncludePathNames} = $value;
 		return $self;
 	}
 	else
 	{
-		return $self->{rasIncludePathNames};
+		return $self->{rhksIncludePathNames};
 	}
 }
 
@@ -132,10 +132,10 @@ sub ToString
 		{
 			my $s0 = '';
 			{
-				foreach my $s (@ {$self->{rasIncludePathNames}})
+				foreach my $ks (sort keys % {$self->{rhksIncludePathNames}})
 				{
 					if (length ($s0)) { $s0 .= ' '; }
-					if (1)            { $s0 .= "\"${s}\""; }
+					if (1)            { $s0 .= "\"${ks}\" => ..."; }
 				}
 			}
 			
