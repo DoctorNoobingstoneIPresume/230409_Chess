@@ -21,14 +21,7 @@ sub Get
 	my $sPathName0        = @_ ? shift : Azzert ();
 	
 	my $rhSourceFiles = $self->{rhSourceFiles};
-	if (exists ($rhSourceFiles->{$sPathName0}))
-	{
-		return $rhSourceFiles->{$sPathName0};
-	}
-	else
-	{
-		return undef;
-	}
+	return exists ($rhSourceFiles->{$sPathName0}) ? $rhSourceFiles->{$sPathName0} : undef;
 }
 
 sub Scan
@@ -36,6 +29,7 @@ sub Scan
 	my $self              = @_ ? shift : Azzert ();
 	my $sPathName0        = @_ ? shift : Azzert ();
 	my $rasIncludeFolders = @_ ? shift : [];
+	my $rhsPathNamesAbove = @_ ? shift : {};
 	# [2023-06-10]
 	if (1)
 	{
@@ -85,32 +79,36 @@ sub Scan
 				$sourcefile->MaxModifyPathName ($sPathName0);
 				
 				my @asNames1 = ();
-				while (defined (my $sLine = <$fh>))
 				{
-					chomp ($sLine);
-					if ($sLine =~ m@^\s*[#]\s*include\s+["<](.*)[">"]\s*$@)
+					while (defined (my $sLine = <$fh>))
 					{
-						#printf (": %s\n", $sLine);
-						push (@asNames1, $1);
+						chomp ($sLine);
+						if ($sLine =~ m@^\s*[#]\s*include\s+["<](.*)[">]\s*$@)
+						{
+							#printf (": %s\n", $sLine);
+							push (@asNames1, $1);
+						}
 					}
 				}
 				
 				$sourcefile->IncludeNames (\@asNames1);
 				
 				my @asPathNames1 = ();
-				foreach my $sName1 (@asNames1)
 				{
-					foreach my $sIncludeFolder (@$rasIncludeFolders)
+					foreach my $sName1 (@asNames1)
 					{
-						my $sPathName1 = $sIncludeFolder . ($sIncludeFolder =~ m#/$# ? '' : '/') . $sName1;
-						my $sourcefile1 = $self->Scan ($sPathName1, $rasIncludeFolders);
-						if ($sourcefile1)
+						foreach my $sIncludeFolder (@$rasIncludeFolders)
 						{
-							push (@asPathNames1, $sPathName1);
-							if ($sourcefile1->MaxModifyTime () > $sourcefile->MaxModifyTime ())
+							my $sPathName1 = $sIncludeFolder . ($sIncludeFolder =~ m#/$# ? '' : '/') . $sName1;
+							my $sourcefile1 = $self->Scan ($sPathName1, $rasIncludeFolders);
+							if ($sourcefile1)
 							{
-								$sourcefile->MaxModifyTime     ($sourcefile1->MaxModifyTime     ());
-								$sourcefile->MaxModifyPathName ($sourcefile1->MaxModifyPathName ());
+								push (@asPathNames1, $sPathName1);
+								if ($sourcefile1->MaxModifyTime () > $sourcefile->MaxModifyTime ())
+								{
+									$sourcefile->MaxModifyTime     ($sourcefile1->MaxModifyTime     ());
+									$sourcefile->MaxModifyPathName ($sourcefile1->MaxModifyPathName ());
+								}
 							}
 						}
 					}
@@ -124,9 +122,9 @@ sub Scan
 		{
 			close ($fh);
 		}
-		
-		$rhSourceFiles->{$sPathName0} = $sourcefile;
 	}
+	
+	$rhSourceFiles->{$sPathName0} = $sourcefile;
 	
 	return $sourcefile;
 }
