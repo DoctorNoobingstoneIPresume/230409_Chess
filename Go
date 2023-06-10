@@ -4,7 +4,7 @@ set -e -o pipefail
 Main ()
 {
 	printf "Building...\n{\n"
-	"./Go.pl" "$@"
+	perl -I "./" "./Go.pl" "$@"
 	printf "}\n\n"
 }
 

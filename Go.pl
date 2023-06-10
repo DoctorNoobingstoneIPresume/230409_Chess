@@ -1,5 +1,6 @@
 #!/usr/bin/env perl
 use strict; use warnings;
+use Scanner;
 use Util;
 
 sub my_system
@@ -54,6 +55,9 @@ sub Main
 		}
 	}
 	
+	# [2023-06-10] TODO: Eliminate the following exit:
+	#{ use IO::Handle; STDOUT->flush (); } exit (0);
+	
 	# [2023-04-11] TODO: Support for unittests...
 	
 	# Compilation:
@@ -61,6 +65,48 @@ sub Main
 	my @asObjectsUT;
 	my @asObjectsMain;
 	my @asObjects;
+	{
+		foreach my $sUnit (@asUnits)
+		{
+			my ($sUnitJustName, $sUnitJustExt) = SplitToJustNameAndJustExt ($sUnit);
+			
+			my $sObject = "${sBuildFolder}/${sUnitJustName}.o";
+			
+			push (@asObjects, $sObject);
+			
+			if    ($sUnitJustName =~ m#_UT$#)
+			{
+				push (@asObjectsUT    , $sObject);
+			}
+			elsif ($sUnitJustName eq 'Main')
+			{
+				push (@asObjectsMain  , $sObject);
+			}
+			else
+			{
+				push (@asObjectsCommon, $sObject);
+			}
+		}
+	}
+	my $scanner = Scanner->CreateObject ();
+	{
+		foreach my $sUnit (@asUnits)
+		{
+			printf ("Scanning \"%s\":\n{\n", $sUnit);
+			my $sourcefile = $scanner->Scan ($sUnit, ['./']);
+			if (defined ($sourcefile))
+			{
+				printf ("%s\n", $sourcefile->ToString ());
+			}
+			else
+			{
+				printf ("undef\n");
+			}
+			printf ("}\n\n");
+			
+			#last;
+		}
+	}
 	{
 		foreach my $sUnit (@asUnits)
 		{
@@ -77,27 +123,43 @@ sub Main
 				'-o', $sObject
 			);
 			
+			my $sourcefile = $scanner->Get ($sUnit);
+			Azzert ($sourcefile);
+			
+			my $tObject = 0;
+			my $fhObject;
+			do
+			{
+				if (! open ($fhObject, '<', $sObject))
+				{
+					printf ("We have failed to open object \"%s\".\n", $sObject);
+					last;
+				}
+				
+				my @asStat = stat ($fhObject);
+				if (! @asStat)
+				{
+					printf ("We have failed to stat \"%s\".\n", $sObject);
+					last;
+				}
+				
+				$tObject = $asStat [9];
+			} while (0);
+			if ($fhObject) { close ($fhObject); }
+			
+			my $bProcess = $sourcefile->MaxModifyTime () >= $tObject;
+			
+			if (! $bProcess)
+			{
+				next;
+			}
+			
 			printf ("Compiling => %s...\n{\n", "\"${sObject}\"");
 			#printf ("%s\n", ArrayToString (\@asArgs));
 			
 			my_system (@asArgs);
 			
 			printf ("}\n\n");
-			
-			push (@asObjects, $sObject);
-			
-			if    ($sUnitJustName =~ m#_UT$#)
-			{
-				push (@asObjectsUT    , $sObject);
-			}
-			elsif ($sUnitJustName eq 'Main')
-			{
-				push (@asObjectsMain  , $sObject);
-			}
-			else
-			{
-				push (@asObjectsCommon, $sObject);
-			}
 		}
 	}
 	
