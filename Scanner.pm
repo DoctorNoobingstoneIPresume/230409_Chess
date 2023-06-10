@@ -45,9 +45,9 @@ sub Scan
 		}
 	}
 	
+	my $rhSourceFiles = $self->{rhSourceFiles};
 	my $sourcefile = undef;
 	{
-		my $rhSourceFiles = $self->{rhSourceFiles};
 		my $fh;
 		do
 		{
@@ -78,7 +78,7 @@ sub Scan
 				$sourcefile->MaxModifyTime     ($t0);
 				$sourcefile->MaxModifyPathName ($sPathName0);
 				
-				my @asNames1 = ();
+				my %hksNames1 = ();
 				{
 					while (defined (my $sLine = <$fh>))
 					{
@@ -86,16 +86,16 @@ sub Scan
 						if ($sLine =~ m@^\s*[#]\s*include\s+["<](.*)[">]\s*$@)
 						{
 							#printf (": %s\n", $sLine);
-							push (@asNames1, $1);
+							$hksNames1 {$1} = 1;
 						}
 					}
 				}
 				
-				$sourcefile->IncludeNames (\@asNames1);
+				$sourcefile->IncludeNames (\%hksNames1);
 				
 				my @asPathNames1 = ();
 				{
-					foreach my $sName1 (@asNames1)
+					foreach my $sName1 (sort keys %hksNames1)
 					{
 						foreach my $sIncludeFolder (@$rasIncludeFolders)
 						{
