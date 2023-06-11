@@ -1,6 +1,9 @@
 #pragma once
 
-#include "_Fwd.hpp"
+#include "_FwdConfig.hpp"
+#if BUILD_SCRIPT_DEBUG
+ #include "Board.hpp"
+#endif
 
 #include <iosfwd>
 #include <memory>

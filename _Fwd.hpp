@@ -1,5 +1,7 @@
 #pragma once
 
+#include "_FwdConfig.hpp"
+
 #include <boost/utility/string_view.hpp>
 
 #include <string>

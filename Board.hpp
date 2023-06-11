@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Cell.hpp"
+#if BUILD_SCRIPT_DEBUG
+ #include "Board_Internal.hpp"
+#endif
 
 #include <vector>
 #include <iosfwd>
