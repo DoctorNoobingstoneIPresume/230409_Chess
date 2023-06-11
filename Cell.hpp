@@ -4,6 +4,7 @@
 #if BUILD_SCRIPT_DEBUG
  #include "Board.hpp"
 #endif
+#include "_Fwd.hpp"
 
 #include <iosfwd>
 #include <memory>
