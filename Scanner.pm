@@ -26,10 +26,25 @@ sub Get
 
 sub Scan
 {
+	my $sPathName0         = scalar (@_) >= 2 ? $_ [1] : Azzert ();
+	my $iLevel             = scalar (@_) >= 5 ? $_ [4] : 0;
+	my $sIndent            = IndentPrefix ($iLevel);
+	
+	printf ("%sScanning \"%s\":\n%s{\n", $sIndent, $sPathName0, $sIndent);
+	my $sourcefileRet = &Do_Scan (@_);
+	printf ("%s}\n\n", $sIndent);
+	
+	return $sourcefileRet;
+}
+
+sub Do_Scan
+{
 	my $self               = @_ ? shift : Azzert ();
 	my $sPathName0         = @_ ? shift : Azzert ();
 	my $rhksIncludeFolders = @_ ? shift : {};
 	my $rhksPathNamesAbove = @_ ? shift : {};
+	my $iLevel             = @_ ? shift : 0;
+	my $sIndent            = IndentPrefix ($iLevel + 1);
 	# [2023-06-10]
 	if (1)
 	{
@@ -40,7 +55,7 @@ sub Scan
 			
 			if ($ks =~ m#(.*)/#)
 			{
-				#printf ("Modifying %s to %s...\n", "\"${s}\"", "\"${1}\"");
+				#printf ("%s" . "Modifying %s to %s...\n", $sIndent, "\"${s}\"", "\"${1}\"");
 				$ks = $1;
 			}
 			
@@ -58,21 +73,23 @@ sub Scan
 		{
 			if (exists ($rhSourceFiles->{$sPathName0}))
 			{
-				return $rhSourceFiles->{$sPathName0};
+				$sourcefile = $rhSourceFiles->{$sPathName0};
+				printf ("%s" . "Scanner::Scan: Returning from cache (%s).\n", $sIndent, $sourcefile ? 'defined' : 'undef');
+				return $sourcefile;
 			}
 			
 			# [2023-06-10] TODO: Is there a chance that a file is opened and read multiple times (by reciprocal inclusion) ?
 			
 			if (! open ($fh, '<', $sPathName0))
 			{
-				printf ("Scanner::Scan: We have failed to open \"%s\".\n", $sPathName0);
+				printf ("%s" . "Scanner::Scan: We have failed to open \"%s\".\n", $sIndent, $sPathName0);
 				last;
 			}
 			
 			my @asStat = stat ($fh);
 			if (! @asStat)
 			{
-				printf ("Scanner::Scan: We have failed to stat \"%s\".\n", $sPathName0);
+				printf ("%s" . "Scanner::Scan: We have failed to stat \"%s\".\n", $sIndent, $sPathName0);
 				last;
 			}
 			
@@ -90,7 +107,7 @@ sub Scan
 						chomp ($sLine);
 						if ($sLine =~ m@^\s*[#]\s*include\s+["<](.*)[">]\s*$@)
 						{
-							#printf (": %s\n", $sLine);
+							#printf ("%s" . ": %s\n", $sIndent, $sLine);
 							$hksNames1 {$1} = 1;
 						}
 					}
@@ -98,6 +115,7 @@ sub Scan
 				
 				$sourcefile->IncludeNames (\%hksNames1);
 				
+				$rhksPathNamesAbove->{$sPathName0} = 1;
 				my %hksPathNames1 = ();
 				{
 					foreach my $sName1 (sort keys %hksNames1)
@@ -105,10 +123,20 @@ sub Scan
 						foreach my $ksIncludeFolder (sort keys %$rhksIncludeFolders)
 						{
 							my $sPathName1 = $ksIncludeFolder . ($ksIncludeFolder =~ m#/$# ? '' : '/') . $sName1;
-							if (exists ($hksPathNames1 {$sPathName1}))
-								{ next; }
 							
-							my $sourcefile1 = $self->Scan ($sPathName1, $rhksIncludeFolders);
+							if (exists ($hksPathNames1 {$sPathName1}))
+							{
+								next;
+							}
+							
+							if (exists ($$rhksPathNamesAbove {$sPathName1}))
+							{
+								printf ("%s" . "Scanner::Scan: Re-inclusion from %s: %s.\n", $sIndent, "\"${sPathName0}\"", "\"${sPathName1}\"");
+								$hksPathNames1 {$sPathName1} = 1;
+								next;
+							}
+							
+							my $sourcefile1 = $self->Scan ($sPathName1, $rhksIncludeFolders, $rhksPathNamesAbove, $iLevel + 1);
 							if ($sourcefile1)
 							{
 								$hksPathNames1 {$sPathName1} = 1;
@@ -147,7 +175,7 @@ sub ToString
 		foreach my $ks (sort keys %$rhSourceFiles)
 		{
 			my $sourcefile = $rhSourceFiles->{$ks};
-			$sRet .= IndentWithTitle ($sourcefile->ToString (), $ks);
+			$sRet .= IndentWithTitle ($sourcefile ? $sourcefile->ToString () : 'undef', $ks);
 		}
 	}
 	

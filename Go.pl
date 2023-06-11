@@ -55,9 +55,6 @@ sub Main
 		}
 	}
 	
-	# [2023-06-10] TODO: Eliminate the following exit:
-	#{ use IO::Handle; STDOUT->flush (); } exit (0);
-	
 	# [2023-04-11] TODO: Support for unittests...
 	
 	# Compilation:
@@ -92,7 +89,7 @@ sub Main
 	{
 		foreach my $sUnit (@asUnits)
 		{
-			printf ("Scanning \"%s\":\n{\n", $sUnit);
+			#printf ("Scanning \"%s\":\n{\n", $sUnit);
 			my $sourcefile = $scanner->Scan ($sUnit, {'./' => 1});
 			if (defined ($sourcefile))
 			{
@@ -102,11 +99,18 @@ sub Main
 			{
 				printf ("undef\n");
 			}
-			printf ("}\n\n");
+			#printf ("}\n\n");
 			
 			#last;
 		}
+		
+		if (1)
+		{
+			printf ("%s\n", IndentWithTitle ($scanner->ToString (), "Scanner"));
+		}
 	}
+	# [2023-06-10] TODO: Eliminate the following exit:
+	#{ use IO::Handle; STDOUT->flush (); } exit (0);
 	{
 		foreach my $sUnit (@asUnits)
 		{
