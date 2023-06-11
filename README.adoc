@@ -1,0 +1,8 @@
+= [2023-04-09] Chess
+:docinfo: shared
+:date:    2023-04-09
+:toc:     macro
+
+== README
+
+Example of applying some object-oriented Design Patterns in C++ (Template, Strategy, Factory, Prototype...).
